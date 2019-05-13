@@ -14,13 +14,28 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.requestPermission()
-.then(function() {
-	console.log('Notification permission granted.');
-	return messaging.getToken();
-})
-.then(function(token) {
-	console.log(token);
-})
-.catch(function(err) {
-	console.log('Unable to get permission to notify.', err);
-});
+	.then(function() {
+		console.log('Notification permission granted.');
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('../sw.js')
+				.then(function(registration) {
+					//using service worker
+					messaging.useServiceWorker(registration);
+
+					//foreground receiving logic
+					messaging.onMessage(function(payload) {
+						//You can use it in your notification logic
+						console.log('Message received. ', payload);
+					});
+					messaging.getToken()
+						.then(function(token) {
+							console.log(token);
+						})
+				}).catch(function(err) {
+				console.log('Service worker registration failed, error:', err);
+			});
+		}
+	})
+	.catch(function(err) {
+		console.log('Unable to get permission to notify.', err);
+	});
