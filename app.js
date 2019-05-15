@@ -17,7 +17,7 @@ messaging.requestPermission()
 	.then(function() {
 		console.log('Notification permission granted.');
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('../sw.js')
+			navigator.serviceWorker.register('./sw.js')
 				.then(function(registration) {
 					//using service worker
 					messaging.useServiceWorker(registration);
