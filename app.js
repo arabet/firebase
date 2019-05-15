@@ -29,6 +29,7 @@ messaging.requestPermission()
 					});
 					messaging.getToken()
 						.then(function(token) {
+							document.getElementById('tokken').innerText = token;
 							console.log(token);
 						})
 				}).catch(function(err) {
